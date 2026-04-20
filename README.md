@@ -1,122 +1,312 @@
-# ASCII Art Color
+# ascii-art-output
 
-A command-line tool written in Go that renders text as ASCII art with optional color highlighting for a specified substring.
+A command-line tool written in Go that converts text into ASCII art and writes the result into a file using a flag.
 
 ---
 
-## Description
+# Table of Contents
 
-ASCII Art Color takes a text input and displays it in ASCII art format using a standard font file (`standard.txt`). It allows you to highlight a specific substring within the text using ANSI terminal colors.
+1. [What This Program Does](#what-this-program-do)
+2. [How to Run It](#how-to-run-it)
+3. [Project Structure](#project-structure)
+4. [How the Program Works](#how-the-program-works)
+5. [Banner Files](#banner-files)
+6. [Example Runs](#example-runs)
+7. [Running Tests](#running-tests)
+
+---
+
+## What This Program Does
+
+This program converts normal text into large **ASCII art characters** using one of three font banners:
+
+- `standard`
+- `shadow`
+- `thinkertoy`
+
+Unlike the basic ascii-art project, this version **writes the output to a file** instead of printing it to the terminal.
+
+The output file is specified using the flag:
+
+`--output=<filename.txt>`
+
+
+**Example:**
+`go run . --output=banner.txt "hello" standard`
+
+
+The ASCII art will be written to `banner.txt`.
+
+---
+
+# How to Run It
+
+Basic usage:
+
+`go run . --output=<fileName.txt> "text" banner`
+
+
+**Example:**
+
+
+`go run . --output=hello.txt "Hello" standard`
+
+
+Then view the output:
+
+
+`cat hello.txt`
+
+
+You should see something like:
+
+```console
+| | | | | |
+| |__| | | |
+| __ |/ _ \ |
+| | | | __/ |
+|| |_|_|_|
+```
+---
+
+## Project Structure
+
+```console
+ascii-art-output/
+│
+├── main.go
+│
+├── ascii/
+│ └── render.go
+│
+├── standard.txt
+├── shadow.txt
+├── thinkertoy.txt
+│
+└── ascii_test.go
+```
+
+## Explanation:
+
+| File | Purpose |
+|-----|------|
+| main.go | Handles command-line arguments and writes output file |
+| render.go | Reads banner files and builds ASCII art |
+| banner files | Store ASCII art fonts |
+| ascii_test.go | Unit tests |
+
+---
+
+## How the Program Works
+
+The program follows these steps:
+
+### 1. Read CLI arguments
+
+Example command:
+
+
+`go run . --output=banner.txt "Hello" standard`
+
+
+    Arguments:
+
+    os.Args[0] → program name
+    os.Args[1] → --output=banner.txt
+    os.Args[2] → Hello
+    os.Args[3] → standard
+
+---
+
+### 2. Validate the flag
+
+The program checks that the first argument starts with:
+
+
+`--output=`
+
+
+If not, it prints the usage message.
+
+---
+
+### 3. Extract the output filename
+
+Example:
+
+
+`--output=banner.txt`
+
+
+becomes
+
+
+    banner.txt
+
+
+using:
+
+
+`strings.TrimPrefix()`
+
+
+---
+
+### 4. Load the banner file
+
+Example banner argument:
+
+
+`standard`
+
+
+becomes:
+
+
+    standard.txt
+
+
+The program reads the file and splits it into lines.
+
+---
+
+### 5. Build the ASCII character map
+
+The banner file stores characters in blocks of **9 lines**:
+
+
+    8 lines of ASCII art
+    1 blank separator line
+
+
+The program converts these into a map:
+
+
+    character → 8 lines of ASCII art
+
+
+Example:
+
+
+`'A' → []string{line1,line2,line3,...line8}`
+
+
+---
+
+### 6. Render the ASCII art
+
+The `PrintAscii` function:
+
+1. Loops through each character of the input text
+2. Looks up the ASCII art in the map
+3. Builds the final output line by line
+4. Returns a large string containing the full ASCII art
+
+---
+
+### 7. Write the output file
+
+Instead of printing to the terminal, the program writes the result using:
+
+
+    os.WriteFile()
+
+
+Example:
+
+
+`os.WriteFile(outputFile, []byte(result), 0644)`
+
+
+---
+
+## Banner Files
+
+The banner files contain ASCII art representations for **all printable characters** from:
+
+    ASCII 32 (space)
+    to
+    ASCII 126 (~)
+
+
+Each character is stored as **8 rows of ASCII art**.
+
+Example structure:
+
+
+    (blank line)
+    A row 1
+    A row 2
+    A row 3
+    A row 4
+    A row 5
+    A row 6
+    A row 7
+    A row 8
+    (blank separator)
+
+
+The program reads these blocks and builds the character map.
+
+---
+
+## Example Runs
+
+Generate ASCII output file:
+
+
+`go run . --output=banner.txt "Hello" standard`
+
+
+Check output:
+
+
+`cat banner.txt`
+
+
+Using another banner:
+
+
+`go run . --output=banner.txt "Hello There!" shadow`
+
+
+---
+
+# Running Tests
+
+Run all tests with:
+
+
+`go test ./...`
+
+
+or:
+
+
+`go test`
+
+
+Verbose output:
+
+
+`go test -v`
+
+
+Example output:
+
+
+    === RUN TestReadBanner
+    --- PASS: TestReadBanner
+    === RUN TestBuildAsciiMap
+    --- PASS: TestBuildAsciiMap
+    PASS
+
 
 ---
 
 ## Requirements
 
-- [Go](https://golang.org/) 1.18 or higher
-- A terminal that supports ANSI color codes
-- `standard.txt` font file in the same directory as the program
+- Go installed
+- Only **standard Go packages**
+- Banner files present in the project folder
 
----
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone http://your-gitea-server/groupleader/ascii-art-color.git
-cd ascii-art-color
-```
-
-2. Ensure `standard.txt` is present in the project directory.
-
----
-
-## Usage
-
-```bash
-go run . --color=COLOR SUBSTRING TEXT
-```
-
-### Arguments
-
-| Argument    | Description                                      | Required |
-|-------------|--------------------------------------------------|----------|
-| `--color`   | The color to apply to the substring              | Yes      |
-| `SUBSTRING` | The part of the text you want to colorize        | Yes      |
-| `TEXT`      | The full text to render in ASCII art             | Yes      |
-
----
-
-## Supported Colors
-
-| Color    | Code          |
-|----------|---------------|
-| `red`    | ANSI Red      |
-| `green`  | ANSI Green    |
-| `blue`   | ANSI Blue     |
-| `yellow` | ANSI Yellow   |
-
----
-
-## Examples
-
-### Colorize a substring in red
-```bash
-go run . --color=red "ello" "Hello World"
-```
-This renders **Hello World** in ASCII art, with **ello** highlighted in red.
-
-### Colorize a word in blue
-```bash
-go run . --color=blue "World" "Hello World"
-```
-
-### Multi-line text using `\n`
-```bash
-go run . --color=green "Hi" "Hi\nThere"
-```
-This renders two lines of ASCII art, with **Hi** highlighted in green.
-
----
-
-## How It Works
-
-1. The program reads the `--color`, `SUBSTRING`, and `TEXT` arguments from the command line.
-2. It looks up the ANSI escape code for the requested color.
-3. It reads the `standard.txt` font file which contains ASCII art representations of each character.
-4. It splits the text by `\n` to handle multi-line input.
-5. For each line, it finds all occurrences of the substring and records their positions.
-6. It prints each character row by row in ASCII art, applying the chosen color to characters that fall within the substring positions.
-7. The ANSI reset code is applied after each colored character to restore normal terminal color.
-
----
-
-## Project Structure
-
-```
-ascii-art-color/
-├── main.go          # Main program logic
-├── standard.txt     # ASCII art font file
-└── README.md        # Project documentation
-```
-
----
-
-## Limitations
-
-- Only printable ASCII characters (32–126) are supported.
-- Only four colors are currently supported: red, green, blue, yellow.
-- The `standard.txt` font file must be present in the same directory.
-
----
-
-## Authors
-
-- **Charles Locko** (clocko)
-- *(Omitogun Oluwatobi)*
-- *(Adejumo Segun- Group Leader)*
-
----
-
-## License
-
-This project is open source and available for educational purposes.

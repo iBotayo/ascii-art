@@ -1,139 +1,122 @@
-# Ascii Art Objectives
+# ASCII Art Color
 
-Ascii-art is a program which consists in receiving a string as an argument and outputting the string in a graphic representation using ASCII. Time to write big.
+A command-line tool written in Go that renders text as ASCII art with optional color highlighting for a specified substring.
 
-What we mean by a graphic representation using ASCII, is to write the string received using ASCII characters,
+---
 
-# Banner Format
+## Description
 
-    Each character has a height of 8 lines.
+ASCII Art Color takes a text input and displays it in ASCII art format using a standard font file (`standard.txt`). It allows you to highlight a specific substring within the text using ANSI terminal colors.
 
-    Characters are separated by a new line \n.
+---
 
-    Here is an example of ' ', '!' and '"'(one dot represents one space) :
+## Requirements
 
+- [Go](https://golang.org/) 1.18 or higher
+- A terminal that supports ANSI color codes
+- `standard.txt` font file in the same directory as the program
 
-......
-......
-......
-......
-......
-......
-......
-......
+---
 
-._..
-|.|.
-|.|.
-|.|.
-|_|.
-(_).
-....
-....
+## Installation
 
-._._..
-(.|.).
-.V.V..
-......
-......
-......
-......
-......
+1. Clone the repository:
+```bash
+git clone http://your-gitea-server/groupleader/ascii-art-color.git
+cd ascii-art-color
+```
 
+2. Ensure `standard.txt` is present in the project directory.
 
+---
 
-# Usage
-student$ go run . "" | cat -e  
-student$ go run . "\n" | cat -e  
-$  
-student$ go run . "Hello\n" | cat -e  
- _    _          _   _          $  
-| |  | |        | | | |         $  
-| |__| |   ___  | | | |   ___   $  
-|  __  |  / _ \ | | | |  / _ \  $  
-| |  | | |  __/ | | | | | (_) | $  
-|_|  |_|  \___| |_| |_|  \___/  $  
-                                $  
-                                $  
-$  
-student$ go run . "hello" | cat -e  
- _              _   _          $  
-| |            | | | |         $  
-| |__     ___  | | | |   ___   $  
-|  _ \   / _ \ | | | |  / _ \  $  
-| | | | |  __/ | | | | | (_) | $  
-|_| |_|  \___| |_| |_|  \___/  $  
-                               $  
-                               $  
-student$ go run . "HeLlO" | cat -e  
- _    _          _        _    ____   $  
-| |  | |        | |      | |  / __ \  $  
-| |__| |   ___  | |      | | | |  | | $  
-|  __  |  / _ \ | |      | | | |  | | $  
-| |  | | |  __/ | |____  | | | |__| | $  
-|_|  |_|  \___| |______| |_|  \____/  $  
-                                      $  
-                                      $  
-student$ go run . "Hello There" | cat -e  
- _    _          _   _                 _______   _                           $  
-| |  | |        | | | |               |__   __| | |                          $  
-| |__| |   ___  | | | |   ___            | |    | |__     ___   _ __    ___  $  
-|  __  |  / _ \ | | | |  / _ \           | |    |  _ \   / _ \ | '__|  / _ \ $  
-| |  | | |  __/ | | | | | (_) |          | |    | | | | |  __/ | |    |  __/ $  
-|_|  |_|  \___| |_| |_|  \___/           |_|    |_| |_|  \___| |_|     \___| $  
-                                                                             $  
-                                                                             $  
-student$ go run . "1Hello 2There" | cat -e  
-     _    _          _   _                         _______   _                           $  
- _  | |  | |        | | | |                ____   |__   __| | |                          $  
-/ | | |__| |   ___  | | | |   ___         |___ \     | |    | |__     ___   _ __    ___  $  
-| | |  __  |  / _ \ | | | |  / _ \          __) |    | |    |  _ \   / _ \ | '__|  / _ \ $  
-| | | |  | | |  __/ | | | | | (_) |        / __/     | |    | | | | |  __/ | |    |  __/ $  
-|_| |_|  |_|  \___| |_| |_|  \___/        |_____|    |_|    |_| |_|  \___| |_|     \___| $  
-                                                                                         $  
-                                                                                         $  
-student$ go run . "{Hello There}" | cat -e
-   __  _    _          _   _                 _______   _                           __    $  
-  / / | |  | |        | | | |               |__   __| | |                          \ \   $  
- | |  | |__| |   ___  | | | |   ___            | |    | |__     ___   _ __    ___   | |  $  
-/ /   |  __  |  / _ \ | | | |  / _ \           | |    |  _ \   / _ \ | '__|  / _ \   \ \ $  
-\ \   | |  | | |  __/ | | | | | (_) |          | |    | | | | |  __/ | |    |  __/   / / $  
- | |  |_|  |_|  \___| |_| |_|  \___/           |_|    |_| |_|  \___| |_|     \___|  | |  $  
-  \_\                                                                              /_/   $  
-                                                                                         $  
-student$ go run . "Hello\nThere" | cat -e  
- _    _          _   _          $  
-| |  | |        | | | |         $  
-| |__| |   ___  | | | |   ___   $  
-|  __  |  / _ \ | | | |  / _ \  $  
-| |  | | |  __/ | | | | | (_) | $  
-|_|  |_|  \___| |_| |_|  \___/  $  
-                                $  
-                                $  
- _______   _                           $  
-|__   __| | |                          $   
-   | |    | |__     ___   _ __    ___  $   
-   | |    |  _ \   / _ \ | '__|  / _ \ $  
-   | |    | | | | |  __/ | |    |  __/ $  
-   |_|    |_| |_|  \___| |_|     \___| $  
-                                       $  
-                                       $  
-student$ go run . "Hello\n\nThere" | cat -e  
- _    _          _   _          $  
-| |  | |        | | | |         $  
-| |__| |   ___  | | | |   ___   $  
-|  __  |  / _ \ | | | |  / _ \  $  
-| |  | | |  __/ | | | | | (_) | $  
-|_|  |_|  \___| |_| |_|  \___/  $  
-                                $  
-                                $  
-$  
- _______   _                           $  
-|__   __| | |                          $  
-   | |    | |__     ___   _ __    ___  $  
-   | |    |  _ \   / _ \ | '__|  / _ \ $  
-   | |    | | | | |  __/ | |    |  __/ $  
-   |_|    |_| |_|  \___| |_|     \___| $  
-                                       $  
-                                       $  
-student$  
+## Usage
+
+```bash
+go run . --color=COLOR SUBSTRING TEXT
+```
+
+### Arguments
+
+| Argument    | Description                                      | Required |
+|-------------|--------------------------------------------------|----------|
+| `--color`   | The color to apply to the substring              | Yes      |
+| `SUBSTRING` | The part of the text you want to colorize        | Yes      |
+| `TEXT`      | The full text to render in ASCII art             | Yes      |
+
+---
+
+## Supported Colors
+
+| Color    | Code          |
+|----------|---------------|
+| `red`    | ANSI Red      |
+| `green`  | ANSI Green    |
+| `blue`   | ANSI Blue     |
+| `yellow` | ANSI Yellow   |
+
+---
+
+## Examples
+
+### Colorize a substring in red
+```bash
+go run . --color=red "ello" "Hello World"
+```
+This renders **Hello World** in ASCII art, with **ello** highlighted in red.
+
+### Colorize a word in blue
+```bash
+go run . --color=blue "World" "Hello World"
+```
+
+### Multi-line text using `\n`
+```bash
+go run . --color=green "Hi" "Hi\nThere"
+```
+This renders two lines of ASCII art, with **Hi** highlighted in green.
+
+---
+
+## How It Works
+
+1. The program reads the `--color`, `SUBSTRING`, and `TEXT` arguments from the command line.
+2. It looks up the ANSI escape code for the requested color.
+3. It reads the `standard.txt` font file which contains ASCII art representations of each character.
+4. It splits the text by `\n` to handle multi-line input.
+5. For each line, it finds all occurrences of the substring and records their positions.
+6. It prints each character row by row in ASCII art, applying the chosen color to characters that fall within the substring positions.
+7. The ANSI reset code is applied after each colored character to restore normal terminal color.
+
+---
+
+## Project Structure
+
+```
+ascii-art-color/
+├── main.go          # Main program logic
+├── standard.txt     # ASCII art font file
+└── README.md        # Project documentation
+```
+
+---
+
+## Limitations
+
+- Only printable ASCII characters (32–126) are supported.
+- Only four colors are currently supported: red, green, blue, yellow.
+- The `standard.txt` font file must be present in the same directory.
+
+---
+
+## Authors
+
+- **Charles Locko** (clocko)
+- *(Omitogun Oluwatobi)*
+- *(Adejumo Segun- Group Leader)*
+
+---
+
+## License
+
+This project is open source and available for educational purposes.
